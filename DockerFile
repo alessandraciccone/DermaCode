@@ -1,3 +1,4 @@
+# Build stage
 FROM maven:3.9.4-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .
@@ -11,7 +12,8 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8000
 
-# Usa il profilo prod
-ENV SPRING_PROFILES_ACTIVE=prod
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", \
+     "-Dspring.datasource.url=${SPRING_DATASOURCE_URL}", \
+     "-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}", \
+     "-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}", \
+     "-jar", "app.jar"]
