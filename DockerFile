@@ -1,4 +1,3 @@
-# Build stage
 FROM maven:3.9.4-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .
@@ -12,5 +11,7 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8000
 
-# Aggiungi opzioni JVM per ambienti cloud
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+# Usa il profilo prod
+ENV SPRING_PROFILES_ACTIVE=prod
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
